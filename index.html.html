@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ComplianceIQ — HR Compliance Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --surface: #16181c;
+    --surface2: #1e2026;
+    --surface3: #252830;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f0;
+    --text2: #9a9da8;
+    --text3: #5a5d6a;
+    --green: #00e5a0;
+    --green-dim: rgba(0,229,160,0.12);
+    --green-mid: rgba(0,229,160,0.25);
+    --amber: #f5a623;
+    --amber-dim: rgba(245,166,35,0.12);
+    --red: #ff5c5c;
+    --red-dim: rgba(255,92,92,0.12);
+    --blue: #5b8dee;
+    --blue-dim: rgba(91,141,238,0.12);
+    --accent: #00e5a0;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--green);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .logo-text span { color: var(--green); }
+
+  .sidebar-section {
+    padding: 16px 12px 8px;
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--text2);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+
+  .nav-item.active {
+    background: var(--green-dim);
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  .nav-icon {
+    width: 18px; height: 18px;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--red);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 20px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .user-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5b8dee, #00e5a0);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .user-info { flex: 1; overflow: hidden; }
+  .user-name { font-size: 12.5px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-plan { font-size: 11px; color: var(--green); }
+
+  /* MAIN */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 16px;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .topbar-title em {
+    font-style: italic;
+    color: var(--green);
+  }
+
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: #0e0f11;
+  }
+
+  .btn-primary:hover { background: #00cc8c; }
+
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { background: var(--surface3); color: var(--text); }
+
+  /* PAGES */
+  .page { display: none; padding: 28px; animation: fadeIn 0.2s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.amber::before { background: var(--amber); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.blue::before { background: var(--blue); }
+
+  .stat-label { font-size: 11.5px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+  .stat-value { font-size: 32px; font-weight: 600; line-height: 1; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+  .stat-card.green .stat-value { color: var(--green); }
+  .stat-card.amber .stat-value { color: var(--amber); }
+  .stat-card.red .stat-value { color: var(--red); }
+  .stat-card.blue .stat-value { color: var(--blue); }
+  .stat-sub { font-size: 12px; color: var(--text3); }
+
+  /* GRID */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 18px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .card-action {
+    font-size: 12px;
+    color: var(--green);
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  /* JURISDICTION TABLE */
+  .jurisdiction-table { width: 100%; }
+
+  .jur-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .jur-row:last-child { border-bottom: none; }
+  .jur-row:hover { background: var(--surface2); }
+
+  .jur-flag {
+    font-size: 20px;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .jur-info { flex: 1; }
+  .jur-name { font-size: 13.5px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .jur-laws { font-size: 12px; color: var(--text3); }
+
+  .jur-status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+
+  .status-ok { background: var(--green-dim); color: var(--green); }
+  .status-warn { background: var(--amber-dim); color: var(--amber); }
+  .status-risk { background: var(--red-dim); color: var(--red); }
+
+  .jur-chevron { color: var(--text3); font-size: 14px; }
+
+  /* ALERTS */
+  .alert-item {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .alert-item:last-child { border-bottom: none; }
+  .alert-item:hover { background: var(--surface2); }
+
+  .alert-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+
+  .alert-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .dot-red { background: var(--red); }
+  .dot-amber { background: var(--amber); }
+  .dot-blue { background: var(--blue); }
+  .dot-green { background: var(--green); }
+
+  .alert-title { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; line-height: 1.4; }
+  .alert-meta { font-size: 11.5px; color: var(--text3); margin-left: 18px; }
+
+  .alert-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 18px;
+    margin-top: 4px;
+  }
+
+  .tag-urgent { background: var(--red-dim); color: var(--red); }
+  .tag-review { background: var(--amber-dim); color: var(--amber); }
+  .tag-info { background: var(--blue-dim); color: var(--blue); }
+
+  /* AI ANALYSIS PAGE */
+  .ai-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+
+  .ai-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ai-icon {
+    width: 36px; height: 36px;
+    background: var(--green-dim);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .ai-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .ai-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+
+  .ai-body { padding: 22px; }
+
+  .policy-input-group { margin-bottom: 16px; }
+  .input-label { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 8px; display: block; }
+
+  .input-field {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .input-field:focus { border-color: var(--green); }
+  .input-field::placeholder { color: var(--text3); }
+
+  select.input-field { cursor: pointer; }
+
+  .analyze-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--green);
+    color: #0e0f11;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .analyze-btn:hover { background: #00cc8c; }
+  .analyze-btn:disabled { background: var(--surface3); color: var(--text3); cursor: not-allowed; }
+
+  /* RESULT BOX */
+  .result-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-top: 18px;
+    display: none;
+  }
+
+  .result-box.visible { display: block; animation: fadeIn 0.3s ease; }
+
+  .result-section { margin-bottom: 18px; }
+  .result-section:last-child { margin-bottom: 0; }
+
+  .result-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  .gap-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--red);
+  }
+
+  .gap-item.warn { border-left-color: var(--amber); }
+  .gap-item.ok { border-left-color: var(--green); }
+
+  .gap-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .gap-text { font-size: 12.5px; color: var(--text2); line-height: 1.5; }
+  .gap-text strong { color: var(--text); font-weight: 500; }
+
+  /* LOADING */
+  .loading-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 30px 0;
+    color: var(--text3);
+    font-size: 13px;
+  }
+
+  .loading-state.visible { display: flex; }
+
+  .spinner {
+    width: 28px; height: 28px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SETTINGS PAGE */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 18px;
+  }
+
+  .settings-nav { display: flex; flex-direction: column; gap: 2px; }
+
+  .snav-item {
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--text2);
+    transition: all 0.1s;
+  }
+
+  .snav-item:hover { background: var(--surface2); color: var(--text); }
+  .snav-item.active { background: var(--green-dim); color: var(--green); font-weight: 500; }
+
+  .settings-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+  .settings-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .settings-sub { font-size: 12.5px; color: var(--text3); margin-bottom: 22px; }
+
+  .form-row { margin-bottom: 16px; }
+  .form-label { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 7px; display: block; }
+
+  .state-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .state-chip {
+    padding: 7px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.1s;
+    user-select: none;
+  }
+
+  .state-chip:hover { border-color: var(--green); color: var(--text); }
+  .state-chip.selected { background: var(--green-dim); border-color: var(--green); color: var(--green); font-weight: 500; }
+
+  .save-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* DIVIDER */
+  .section-spacer { height: 18px; }
+
+  /* PLAN BADGE */
+  .plan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green-dim);
+    border: 1px solid rgba(0,229,160,0.2);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* COMPLIANCE SCORE RING */
+  .score-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .score-ring {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+  }
+
+  .score-ring svg { transform: rotate(-90deg); }
+
+  .score-num {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 22px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    color: var(--green);
+  }
+
+  .score-details { flex: 1; }
+  .score-label { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .score-desc { font-size: 12px; color: var(--text3); line-height: 1.5; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text);
+    z-index: 1000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    color: var(--text3);
+    text-align: center;
+    gap: 10px;
+  }
+
+  .empty-icon { font-size: 36px; margin-bottom: 6px; opacity: 0.5; }
+  .empty-title { font-size: 14px; font-weight: 500; color: var(--text2); }
+  .empty-sub { font-size: 13px; max-width: 280px; line-height: 1.5; }
+
+  /* REPORTS */
+  .report-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .report-item:last-child { border-bottom: none; }
+  .report-item:hover { background: var(--surface2); }
+  .report-icon { font-size: 22px; flex-shrink: 0; }
+  .report-info { flex: 1; }
+  .report-name { font-size: 13.5px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .report-meta { font-size: 12px; color: var(--text3); }
+  .report-dl { font-size: 12px; color: var(--green); font-weight: 500; }
+
+  @media (max-width: 1100px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .content-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">⚖</div>
+      <div class="logo-text">Compliance<span>IQ</span></div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Main</div>
+    <button class="nav-item active" onclick="showPage('dashboard', this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1" stroke-width="1.5"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="showPage('alerts', this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Alerts
+      <span class="nav-badge">3</span>
+    </button>
+    <button class="nav-item" onclick="showPage('analysis', this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18" stroke-width="1.5" stroke-linecap="round"/></svg>
+      AI Analysis
+    </button>
+    <button class="nav-item" onclick="showPage('reports', this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Reports
+    </button>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Account</div>
+    <button class="nav-item" onclick="showPage('settings', this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke-width="1.5"/></svg>
+      Settings
+    </button>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="user-avatar">JD</div>
+      <div class="user-info">
+        <div class="user-name">Jordan Davis</div>
+        <div class="user-plan">Growth Plan</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Good morning, <em>Jordan</em></div>
+    <div class="topbar-actions">
+      <span class="plan-badge">✦ Growth Plan</span>
+      <button class="btn btn-ghost" onclick="showToast('Scanning for new law changes...')">🔄 Sync Laws</button>
+      <button class="btn btn-primary" onclick="showPage('analysis', document.querySelector('[onclick*=analysis]'))">+ Run Analysis</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD PAGE -->
+  <div class="page active" id="page-dashboard">
+    <div class="stats-row">
+      <div class="stat-card green">
+        <div class="stat-label">Compliance Score</div>
+        <div class="stat-value">78<span style="font-size:16px;font-weight:400">%</span></div>
+        <div class="stat-sub">↑ 4pts from last month</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Urgent Issues</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">Require immediate action</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-label">Pending Reviews</div>
+        <div class="stat-value">7</div>
+        <div class="stat-sub">Policies need updating</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">States Tracked</div>
+        <div class="stat-value">8</div>
+        <div class="stat-sub">Active jurisdictions</div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- LEFT COLUMN -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Jurisdiction Status</div>
+            <div class="card-action" onclick="showPage('settings', document.querySelector('[onclick*=settings]'))">Manage states →</div>
+          </div>
+          <div class="jurisdiction-table">
+            <div class="jur-row" onclick="showToast('Loading California details...')">
+              <div class="jur-flag">🇺🇸</div>
+              <div class="jur-info">
+                <div class="jur-name">California</div>
+                <div class="jur-laws">AB5, CCPA, CFRA, Prop 22 — 14 active laws</div>
+              </div>
+              <span class="jur-status status-risk">2 Issues</span>
+              <div class="jur-chevron">›</div>
+            </div>
+            <div class="jur-row" onclick="showToast('Loading New York details...')">
+              <div class="jur-flag">🗽</div>
+              <div class="jur-info">
+                <div class="jur-name">New York</div>
+                <div class="jur-laws">SHIELD Act, NY HERO Act — 11 active laws</div>
+              </div>
+              <span class="jur-status status-warn">1 Review</span>
+              <div class="jur-chevron">›</div>
+            </div>
+            <div class="jur-row" onclick="showToast('Loading Texas details...')">
+              <div class="jur-flag">⭐</div>
+              <div class="jur-info">
+                <div class="jur-name">Texas</div>
+                <div class="jur-laws">At-will employment, TCHRA — 6 active laws</div>
+              </div>
+              <span class="jur-status status-ok">Compliant</span>
+              <div class="jur-chevron">›</div>
+            </div>
+            <div class="jur-row" onclick="showToast('Loading Washington details...')">
+              <div class="jur-flag">🌲</div>
+              <div class="jur-info">
+                <div class="jur-name">Washington</div>
+                <div class="jur-laws">WFLA, L&I requirements — 9 active laws</div>
+              </div>
+              <span class="jur-status status-ok">Compliant</span>
+              <div class="jur-chevron">›</div>
+            </div>
+            <div class="jur-row" onclick="showToast('Loading Colorado details...')">
+              <div class="jur-flag">🏔</div>
+              <div class="jur-info">
+                <div class="jur-name">Colorado</div>
+                <div class="jur-laws">COMPS, EPEWA, HFWA — 8 active laws</div>
+              </div>
+              <span class="jur-status status-warn">1 Review</span>
+              <div class="jur-chevron">›</div>
+            </div>
+            <div class="jur-row" onclick="showToast('Loading Illinois details...')">
+              <div class="jur-flag">🏙</div>
+              <div class="jur-info">
+                <div class="jur-name">Illinois</div>
+                <div class="jur-laws">BIPA, Chicago PSST — 10 active laws</div>
+              </div>
+              <span class="jur-status status-ok">Compliant</span>
+              <div class="jur-chevron">›</div>
+            </div>
+            <div class="jur-row" onclick="showToast('Loading Florida details...')">
+              <div class="jur-flag">☀️</div>
+              <div class="jur-info">
+                <div class="jur-name">Florida</div>
+                <div class="jur-laws">FCRA, reemployment tax — 5 active laws</div>
+              </div>
+              <span class="jur-status status-ok">Compliant</span>
+              <div class="jur-chevron">›</div>
+            </div>
+            <div class="jur-row" onclick="showToast('Loading Massachusetts details...')">
+              <div class="jur-flag">🦞</div>
+              <div class="jur-info">
+                <div class="jur-name">Massachusetts</div>
+                <div class="jur-laws">PFML, Pay Equity Act — 9 active laws</div>
+              </div>
+              <span class="jur-status status-warn">Update needed</span>
+              <div class="jur-chevron">›</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-spacer"></div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Compliance Score Breakdown</div>
+          </div>
+          <div class="score-ring-wrap">
+            <div class="score-ring">
+              <svg width="90" height="90" viewBox="0 0 90 90">
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#1e2026" stroke-width="8"/>
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#00e5a0" stroke-width="8"
+                  stroke-dasharray="238.76" stroke-dashoffset="52.5" stroke-linecap="round"/>
+              </svg>
+              <div class="score-num">78</div>
+            </div>
+            <div class="score-details">
+              <div class="score-label">Good standing with gaps</div>
+              <div class="score-desc">Your policies cover 78% of required compliance areas. 3 urgent issues in California and 4 pending policy updates are reducing your score. Resolve these to reach 90%+.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent Law Changes</div>
+            <div class="card-action" onclick="showPage('alerts', document.querySelector('[onclick*=alerts]'))">View all →</div>
+          </div>
+          <div class="alert-item" onclick="showToast('Opening California minimum wage alert...')">
+            <div class="alert-top">
+              <div class="alert-dot dot-red"></div>
+              <div class="alert-title">California minimum wage increase effective Jan 1</div>
+            </div>
+            <div class="alert-meta">California · 2 days ago</div>
+            <span class="alert-tag tag-urgent">Urgent</span>
+          </div>
+          <div class="alert-item" onclick="showToast('Opening Colorado EPEWA alert...')">
+            <div class="alert-top">
+              <div class="alert-dot dot-amber"></div>
+              <div class="alert-title">Colorado EPEWA pay transparency rule expanded</div>
+            </div>
+            <div class="alert-meta">Colorado · 5 days ago</div>
+            <span class="alert-tag tag-review">Review needed</span>
+          </div>
+          <div class="alert-item" onclick="showToast('Opening NY leave policy alert...')">
+            <div class="alert-top">
+              <div class="alert-dot dot-amber"></div>
+              <div class="alert-title">New York paid leave policy amendment passed</div>
+            </div>
+            <div class="alert-meta">New York · 1 week ago</div>
+            <span class="alert-tag tag-review">Review needed</span>
+          </div>
+          <div class="alert-item" onclick="showToast('Opening Federal FLSA update...')">
+            <div class="alert-top">
+              <div class="alert-dot dot-blue"></div>
+              <div class="alert-title">Federal FLSA overtime threshold updated</div>
+            </div>
+            <div class="alert-meta">Federal · 2 weeks ago</div>
+            <span class="alert-tag tag-info">Informational</span>
+          </div>
+          <div class="alert-item" onclick="showToast('Opening Massachusetts PFML update...')">
+            <div class="alert-top">
+              <div class="alert-dot dot-blue"></div>
+              <div class="alert-title">Massachusetts PFML contribution rates adjusted</div>
+            </div>
+            <div class="alert-meta">Massachusetts · 3 weeks ago</div>
+            <span class="alert-tag tag-info">Informational</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTS PAGE -->
+  <div class="page" id="page-alerts">
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-header">
+        <div class="card-title">🚨 Urgent — Action Required</div>
+        <span style="font-size:12px;color:var(--red)">3 items</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-red"></div>
+          <div class="alert-title">California minimum wage increases to $17.50/hr for non-fast food employers on Jan 1, 2025</div>
+        </div>
+        <div class="alert-meta">Affected policy: Compensation Policy · California · Added 2 days ago</div>
+        <span class="alert-tag tag-urgent">Urgent — update payroll immediately</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-red"></div>
+          <div class="alert-title">AB5 contractor reclassification — 2 worker roles may now qualify as employees under California law</div>
+        </div>
+        <div class="alert-meta">Affected policy: Worker Classification Policy · California · Added 4 days ago</div>
+        <span class="alert-tag tag-urgent">Urgent — legal review recommended</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-red"></div>
+          <div class="alert-title">Illinois BIPA biometric data consent forms required for all employees using time-clock systems</div>
+        </div>
+        <div class="alert-meta">Affected policy: Data Privacy Policy · Illinois · Added 1 week ago</div>
+        <span class="alert-tag tag-urgent">Urgent — consent forms missing</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-header">
+        <div class="card-title">⚠️ Review Needed</div>
+        <span style="font-size:12px;color:var(--amber)">4 items</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-amber"></div>
+          <div class="alert-title">Colorado EPEWA now requires salary ranges in all job postings including remote roles</div>
+        </div>
+        <div class="alert-meta">Affected policy: Hiring & Recruitment Policy · Colorado · 5 days ago</div>
+        <span class="alert-tag tag-review">Review by end of month</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-amber"></div>
+          <div class="alert-title">New York paid leave now covers domestic violence situations — policy update required</div>
+        </div>
+        <div class="alert-meta">Affected policy: Leave of Absence Policy · New York · 1 week ago</div>
+        <span class="alert-tag tag-review">Review by end of month</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-amber"></div>
+          <div class="alert-title">Massachusetts PFML employee contribution rate changes Feb 1 — update payroll deductions</div>
+        </div>
+        <div class="alert-meta">Affected policy: Benefits Policy · Massachusetts · 3 weeks ago</div>
+        <span class="alert-tag tag-review">Update before Feb 1</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-amber"></div>
+          <div class="alert-title">Washington WFLA expands to cover companies with 50+ employees — verify your headcount threshold</div>
+        </div>
+        <div class="alert-meta">Affected policy: Family Leave Policy · Washington · 3 weeks ago</div>
+        <span class="alert-tag tag-review">Confirm eligibility</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">ℹ️ Informational Updates</div>
+        <span style="font-size:12px;color:var(--blue)">2 items</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-blue"></div>
+          <div class="alert-title">Federal FLSA overtime salary threshold increased to $684/week — no action needed if already above threshold</div>
+        </div>
+        <div class="alert-meta">Federal · 2 weeks ago · No immediate action required</div>
+        <span class="alert-tag tag-info">Informational</span>
+      </div>
+      <div class="alert-item">
+        <div class="alert-top">
+          <div class="alert-dot dot-blue"></div>
+          <div class="alert-title">DOL updated FMLA poster requirements — new poster must be displayed by March 1</div>
+        </div>
+        <div class="alert-meta">Federal · 1 month ago · Low urgency</div>
+        <span class="alert-tag tag-info">Download new poster</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI ANALYSIS PAGE -->
+  <div class="page" id="page-analysis">
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:18px">
+      <div>
+        <div class="ai-panel">
+          <div class="ai-header">
+            <div class="ai-icon">🤖</div>
+            <div>
+              <div class="ai-title">AI Policy Gap Analyzer</div>
+              <div class="ai-sub">Powered by Claude — paste your policy and get instant compliance analysis</div>
+            </div>
+          </div>
+          <div class="ai-body">
+            <div class="policy-input-group">
+              <label class="input-label">Select state / jurisdiction</label>
+              <select class="input-field" id="state-select">
+                <option>California</option>
+                <option>New York</option>
+                <option>Colorado</option>
+                <option>Washington</option>
+                <option>Illinois</option>
+                <option>Massachusetts</option>
+                <option>Texas</option>
+                <option>Florida</option>
+              </select>
+            </div>
+            <div class="policy-input-group">
+              <label class="input-label">Select policy type</label>
+              <select class="input-field" id="policy-type">
+                <option>Worker Classification Policy</option>
+                <option>Leave of Absence Policy</option>
+                <option>Compensation & Pay Policy</option>
+                <option>Hiring & Recruitment Policy</option>
+                <option>Data Privacy Policy</option>
+                <option>Anti-Discrimination Policy</option>
+                <option>Remote Work Policy</option>
+              </select>
+            </div>
+            <div class="policy-input-group">
+              <label class="input-label">Paste your current policy text</label>
+              <textarea class="input-field" id="policy-text" rows="7" placeholder="Paste your HR policy here... For example: 'Our company classifies workers as independent contractors when they set their own hours, use their own equipment, and work for multiple clients simultaneously...'"></textarea>
+            </div>
+            <button class="analyze-btn" id="analyze-btn" onclick="runAnalysis()">
+              ✦ Analyze Policy with AI
+            </button>
+
+            <div class="loading-state" id="loading-state">
+              <div class="spinner"></div>
+              <span>Analyzing your policy against current laws...</span>
+            </div>
+
+            <div class="result-box" id="result-box">
+              <div class="result-section">
+                <div class="result-section-title">⚠ Compliance Gaps Found</div>
+                <div id="gaps-list"></div>
+              </div>
+              <div class="result-section">
+                <div class="result-section-title">✓ What Your Policy Covers</div>
+                <div id="ok-list"></div>
+              </div>
+              <div class="result-section">
+                <div class="result-section-title" style="color:var(--text3);font-size:11px;margin-top:14px">⚠ Disclaimer: This analysis is informational only and does not constitute legal advice. Consult an employment attorney before making policy changes.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-header"><div class="card-title">Recent Analyses</div></div>
+          <div class="alert-item">
+            <div class="alert-top">
+              <div class="alert-dot dot-red"></div>
+              <div class="alert-title">Worker Classification — California</div>
+            </div>
+            <div class="alert-meta">3 gaps found · 2 hours ago</div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-top">
+              <div class="alert-dot dot-amber"></div>
+              <div class="alert-title">Leave Policy — New York</div>
+            </div>
+            <div class="alert-meta">1 gap found · Yesterday</div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-top">
+              <div class="alert-dot dot-green"></div>
+              <div class="alert-title">Hiring Policy — Texas</div>
+            </div>
+            <div class="alert-meta">No gaps found · 3 days ago</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">How it works</div></div>
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:22px;height:22px;background:var(--green-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green);font-weight:600;flex-shrink:0">1</div>
+              <div style="font-size:12.5px;color:var(--text2);line-height:1.5">Select your state and policy type so the AI knows which laws to check against</div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:22px;height:22px;background:var(--green-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green);font-weight:600;flex-shrink:0">2</div>
+              <div style="font-size:12.5px;color:var(--text2);line-height:1.5">Paste your current policy text — the more detail the better the analysis</div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:22px;height:22px;background:var(--green-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green);font-weight:600;flex-shrink:0">3</div>
+              <div style="font-size:12.5px;color:var(--text2);line-height:1.5">AI identifies gaps, missing clauses, and specific recommendations to fix each issue</div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:22px;height:22px;background:var(--green-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green);font-weight:600;flex-shrink:0">4</div>
+              <div style="font-size:12.5px;color:var(--text2);line-height:1.5">Share findings with your employment attorney to action the updates</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORTS PAGE -->
+  <div class="page" id="page-reports">
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-header">
+        <div class="card-title">Generated Reports</div>
+        <button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="showToast('Generating new compliance report...')">+ Generate Report</button>
+      </div>
+      <div class="report-item" onclick="showToast('Downloading Q1 2025 Compliance Audit...')">
+        <div class="report-icon">📋</div>
+        <div class="report-info">
+          <div class="report-name">Q1 2025 Compliance Audit — All States</div>
+          <div class="report-meta">8 jurisdictions · 47 policies reviewed · Generated Jan 15, 2025</div>
+        </div>
+        <div class="report-dl">↓ Download PDF</div>
+      </div>
+      <div class="report-item" onclick="showToast('Downloading California Deep Dive report...')">
+        <div class="report-icon">📊</div>
+        <div class="report-info">
+          <div class="report-name">California Compliance Deep Dive</div>
+          <div class="report-meta">14 laws analyzed · 3 gaps identified · Generated Jan 10, 2025</div>
+        </div>
+        <div class="report-dl">↓ Download PDF</div>
+      </div>
+      <div class="report-item" onclick="showToast('Downloading Gap Analysis report...')">
+        <div class="report-icon">🔍</div>
+        <div class="report-info">
+          <div class="report-name">Policy Gap Analysis — Worker Classification</div>
+          <div class="report-meta">5 states reviewed · 8 gaps found · Generated Jan 5, 2025</div>
+        </div>
+        <div class="report-dl">↓ Download PDF</div>
+      </div>
+      <div class="report-item" onclick="showToast('Downloading December summary...')">
+        <div class="report-icon">📅</div>
+        <div class="report-info">
+          <div class="report-name">December 2024 Law Changes Summary</div>
+          <div class="report-meta">12 law changes tracked · 4 states affected · Generated Dec 31, 2024</div>
+        </div>
+        <div class="report-dl">↓ Download PDF</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Scheduled Reports</div></div>
+      <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:14px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm)">
+          <div style="font-size:18px">📬</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500;color:var(--text)">Monthly compliance digest</div>
+            <div style="font-size:12px;color:var(--text3)">Sent to jordan@company.com on the 1st of every month</div>
+          </div>
+          <div style="font-size:12px;color:var(--green);font-weight:500">Active</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm)">
+          <div style="font-size:18px">⚡</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500;color:var(--text)">Real-time law change alerts</div>
+            <div style="font-size:12px;color:var(--text3)">Instant email when a tracked law changes</div>
+          </div>
+          <div style="font-size:12px;color:var(--green);font-weight:500">Active</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <div class="page" id="page-settings">
+    <div class="settings-grid">
+      <div class="settings-nav">
+        <div class="snav-item active" onclick="this.parentElement.querySelectorAll('.snav-item').forEach(x=>x.classList.remove('active'));this.classList.add('active')">Company Profile</div>
+        <div class="snav-item" onclick="this.parentElement.querySelectorAll('.snav-item').forEach(x=>x.classList.remove('active'));this.classList.add('active')">Jurisdictions</div>
+        <div class="snav-item" onclick="this.parentElement.querySelectorAll('.snav-item').forEach(x=>x.classList.remove('active'));this.classList.add('active')">Notifications</div>
+        <div class="snav-item" onclick="this.parentElement.querySelectorAll('.snav-item').forEach(x=>x.classList.remove('active'));this.classList.add('active')">Billing & Plan</div>
+        <div class="snav-item" onclick="this.parentElement.querySelectorAll('.snav-item').forEach(x=>x.classList.remove('active'));this.classList.add('active')">Team Members</div>
+      </div>
+
+      <div class="settings-form">
+        <div class="settings-title">Company Profile</div>
+        <div class="settings-sub">Basic information about your company used to personalize compliance monitoring.</div>
+
+        <div class="form-row">
+          <label class="form-label">Company name</label>
+          <input class="input-field" type="text" value="Acme Corporation" style="width:100%">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Industry</label>
+          <select class="input-field" style="width:100%">
+            <option selected>Technology / SaaS</option>
+            <option>Staffing & Recruiting</option>
+            <option>Healthcare</option>
+            <option>Retail & Franchise</option>
+            <option>Construction</option>
+            <option>Professional Services</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Number of employees</label>
+          <select class="input-field" style="width:100%">
+            <option>1–50</option>
+            <option selected>51–200</option>
+            <option>201–500</option>
+            <option>500+</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">HR contact email</label>
+          <input class="input-field" type="email" value="jordan@company.com" style="width:100%">
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">States where you have employees</label>
+          <div class="state-grid">
+            <div class="state-chip selected" onclick="this.classList.toggle('selected')">California</div>
+            <div class="state-chip selected" onclick="this.classList.toggle('selected')">New York</div>
+            <div class="state-chip selected" onclick="this.classList.toggle('selected')">Texas</div>
+            <div class="state-chip selected" onclick="this.classList.toggle('selected')">Washington</div>
+            <div class="state-chip selected" onclick="this.classList.toggle('selected')">Colorado</div>
+            <div class="state-chip selected" onclick="this.classList.toggle('selected')">Illinois</div>
+            <div class="state-chip selected" onclick="this.classList.toggle('selected')">Florida</div>
+            <div class="state-chip selected" onclick="this.classList.toggle('selected')">Massachusetts</div>
+            <div class="state-chip" onclick="this.classList.toggle('selected')">Georgia</div>
+            <div class="state-chip" onclick="this.classList.toggle('selected')">Arizona</div>
+            <div class="state-chip" onclick="this.classList.toggle('selected')">Oregon</div>
+            <div class="state-chip" onclick="this.classList.toggle('selected')">Nevada</div>
+            <div class="state-chip" onclick="this.classList.toggle('selected')">Minnesota</div>
+            <div class="state-chip" onclick="this.classList.toggle('selected')">Michigan</div>
+            <div class="state-chip" onclick="this.classList.toggle('selected')">Ohio</div>
+            <div class="state-chip" onclick="this.classList.toggle('selected')">Virginia</div>
+          </div>
+        </div>
+
+        <div class="save-bar">
+          <button class="btn btn-primary" onclick="showToast('Settings saved successfully!')">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  const titles = {
+    dashboard: 'Good morning, <em>Jordan</em>',
+    alerts: 'Compliance <em>Alerts</em>',
+    analysis: 'AI Policy <em>Analysis</em>',
+    reports: 'Compliance <em>Reports</em>',
+    settings: 'Account <em>Settings</em>'
+  };
+  document.getElementById('topbar-title').innerHTML = titles[id] || id;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function runAnalysis() {
+  const policy = document.getElementById('policy-text').value.trim();
+  const state = document.getElementById('state-select').value;
+  const policyType = document.getElementById('policy-type').value;
+
+  if (!policy) {
+    showToast('Please paste your policy text first.');
+    return;
+  }
+
+  const btn = document.getElementById('analyze-btn');
+  const loading = document.getElementById('loading-state');
+  const resultBox = document.getElementById('result-box');
+
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+  loading.classList.add('visible');
+  resultBox.classList.remove('visible');
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `You are an HR compliance expert. Analyze this ${policyType} for a company with employees in ${state}.
+
+Policy text:
+"${policy}"
+
+Respond ONLY with valid JSON in this exact format, no markdown, no extra text:
+{
+  "gaps": [
+    {"severity": "high", "issue": "brief issue title", "detail": "one sentence explanation of the gap and what law requires"},
+    {"severity": "medium", "issue": "brief issue title", "detail": "one sentence explanation"}
+  ],
+  "covered": [
+    {"point": "one sentence of what the policy covers correctly"}
+  ]
+}
+
+Identify 2-4 real compliance gaps specific to ${state} ${policyType} requirements, and 2-3 things the policy does cover. Be specific to actual ${state} laws like AB5, CCPA, CFRA, NY HERO Act, EPEWA etc. as relevant.`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content[0].text;
+    const clean = text.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
+
+    const gapsList = document.getElementById('gaps-list');
+    const okList = document.getElementById('ok-list');
+
+    gapsList.innerHTML = result.gaps.map(g => `
+      <div class="gap-item ${g.severity === 'medium' ? 'warn' : ''}">
+        <div class="gap-icon">${g.severity === 'high' ? '🔴' : '🟡'}</div>
+        <div class="gap-text"><strong>${g.issue}:</strong> ${g.detail}</div>
+      </div>
+    `).join('');
+
+    okList.innerHTML = result.covered.map(c => `
+      <div class="gap-item ok">
+        <div class="gap-icon">✅</div>
+        <div class="gap-text">${c.point}</div>
+      </div>
+    `).join('');
+
+    resultBox.classList.add('visible');
+
+  } catch (err) {
+    showToast('Analysis failed — please try again.');
+    console.error(err);
+  }
+
+  loading.classList.remove('visible');
+  btn.disabled = false;
+  btn.innerHTML = '✦ Analyze Policy with AI';
+}
+</script>
+</body>
+</html>
